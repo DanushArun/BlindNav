@@ -16,7 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, View, AccessibilityInfo } from 'react-native';
 import { useAppStore, useCurrentScreen } from './src/store/useAppStore';
 import { HomeScreen } from './src/screens/HomeScreen';
-import { CameraScreen } from './src/screens/CameraScreen';
+import { CameraScreenLive as CameraScreen } from './src/screens/CameraScreenLive';
 import { UI_CONFIG } from './src/constants';
 import speechService from './src/services/speech/speechService';
 
