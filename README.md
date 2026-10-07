@@ -1,173 +1,58 @@
-# BlindNav - AI Navigation for the Blind
+# BlindNav
 
-Real-time AI-powered navigation assistant for blind users. Uses Google Gemini Vision to describe surroundings through voice feedback.
+An Expo / React Native prototype that captures camera images and generates spoken scene
+information through Google Gemini. Speech and haptic services support the camera interface.
+The current app routes to `CameraScreenLive`, despite also retaining an older camera screen.
 
-## Features (MVP)
+## Implemented pieces
 
-- ✅ **Single Big Button** - Tap anywhere to start camera
-- ✅ **Real-time AI Narration** - Continuous description of surroundings
-- ✅ **Photo Capture** - Long press to capture and describe moments
-- ✅ **Haptic Feedback** - Different vibration patterns for different alerts
-- ✅ **Priority-based Speech** - Critical alerts interrupt, background info queued
-- ✅ **Offline Capable** - Core features work without internet (using on-device fallback)
+- A large start control and a camera screen.
+- Camera-frame analysis, generated descriptions and native speech output.
+- Haptic patterns and speech-service controls.
+- Zustand state for screen and user preferences.
+- Committed iOS native project and a speech-service unit test file.
 
-## Tech Stack
-
-- **Framework**: React Native + Expo SDK 54
-- **Language**: TypeScript
-- **State**: Zustand
-- **AI**: Google Gemini 2.0 Flash Vision (Free Tier)
-- **TTS**: expo-speech (Native platform TTS)
-- **Haptics**: expo-haptics
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- Expo CLI (`npm install -g expo-cli`)
-- iOS Simulator or Android Emulator (or physical device)
-- Gemini API Key (free at https://aistudio.google.com/apikey)
-
-### Installation
+## Local setup
 
 ```bash
-# Navigate to project
-cd blind-nav-app
-
-# Install dependencies
-npm install
-
-# Configure environment
+git clone https://github.com/DanushArun/BlindNav.git
+cd BlindNav
+npm ci
 cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
-
-# Start development server
-npx expo start
+npm start
 ```
 
-### Running on Device
+Set `EXPO_PUBLIC_GEMINI_API_KEY` to your own development key.
+The active service names `gemini-2.0-flash-exp`; current provider availability was not verified.
+Camera evaluation requires a device or suitable emulator and camera/microphone permissions.
+
+Native development commands declared in the manifest:
 
 ```bash
-# iOS Simulator
-npx expo run:ios
-
-# Android Emulator
-npx expo run:android
-
-# Physical device (scan QR code)
-npx expo start
+npm run ios
+npm run android
 ```
 
-## Project Structure
+These compile native applications and require the corresponding Xcode or Android toolchain.
+Expo public environment variables are embedded in the client bundle; they are not a secure
+server-side secret store. See [Expo environment
+guidance](https://docs.expo.dev/guides/environment-variables/).
 
-```
-blind-nav-app/
-├── src/
-│   ├── screens/           # Screen components
-│   │   ├── HomeScreen.tsx      # Big button home
-│   │   └── CameraScreen.tsx    # AI camera view
-│   ├── services/          # Core services
-│   │   ├── ai/                 # Gemini integration
-│   │   ├── speech/             # TTS service
-│   │   └── haptics/            # Vibration patterns
-│   ├── store/             # Zustand state
-│   ├── types/             # TypeScript types
-│   ├── constants/         # App configuration
-│   └── utils/             # Helper functions
-├── __tests__/             # Unit & integration tests
-├── assets/                # Icons, splash screens
-├── App.tsx                # Root component
-├── app.json               # Expo configuration
-└── .env                   # API keys (gitignored)
-```
+## Source map
 
-## Configuration
+- [App.tsx](App.tsx): home/camera routing and speech initialization.
+- [CameraScreenLive.tsx](src/screens/CameraScreenLive.tsx): active camera experience.
+- [geminiLive.ts](src/services/ai/geminiLive.ts): current generation session.
+- [speechService.ts](src/services/speech/speechService.ts): speech handling.
+- [hapticsService.ts](src/services/haptics/hapticsService.ts): haptic patterns.
 
-### Environment Variables
+## Verification and boundaries
 
-```env
-EXPO_PUBLIC_GEMINI_API_KEY=your_key_here
-EXPO_PUBLIC_APP_ENV=development
-```
+The README was checked against source, scripts and Expo SDK 54 documentation.
+No device trial, accessibility audit or live provider evaluation was performed.
+There is a unit-test source file, but `package.json` has no `test` script.
 
-### Verbosity Modes
-
-- **Critical**: Only obstacles and dangers
-- **Balanced**: Obstacles + scene summary (default)
-- **Detailed**: Everything visible + text recognition
-
-### Rate Limits (Free Tier)
-
-- Gemini API: 15 requests/minute, 1M tokens/day
-- App processes 1 frame every 3 seconds (stays within limits)
-
-## Accessibility Features
-
-- Full VoiceOver/TalkBack support
-- Large touch targets (70% screen)
-- Haptic feedback for all interactions
-- Voice feedback for every action
-- No visual dependency required
-
-## Testing
-
-```bash
-# Run unit tests
-npm test
-
-# Run with coverage
-npm test -- --coverage
-
-# Type checking
-npx tsc --noEmit
-```
-
-## Building for Production
-
-```bash
-# Build for iOS
-npx expo build:ios
-
-# Build for Android
-npx expo build:android
-
-# Using EAS Build (recommended)
-npx eas build --platform all
-```
-
-## Free Tier Limitations
-
-- **Gemini API**: 15 RPM, 1M tokens/day (sufficient for ~500 analyses/day)
-- **No cost for TTS**: Uses native platform speech
-- **No cost for haptics**: Uses native vibration API
-
-## Roadmap (Post-MVP)
-
-- [ ] Volume button photo capture (native module)
-- [ ] Turn-by-turn navigation
-- [ ] More Indian languages (Tamil, Telugu, etc.)
-- [ ] Currency detection
-- [ ] Face recognition (opt-in)
-- [ ] Wearable support (smart glasses)
-
-## Contributing
-
-1. Fork the repo
-2. Create feature branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing`)
-5. Open Pull Request
-
-## License
-
-MIT License - See LICENSE file
-
-## Support
-
-- **Issues**: GitHub Issues
-- **Email**: [your-email]
-
----
-
-Built with ❤️ for the blind community in India.
+Network-based scene understanding is not an independently validated offline navigation system.
+The repository does not demonstrate reliable obstacle detection, route guidance or safe navigation
+with blind users. Generated descriptions may be wrong or delayed; evaluate the prototype with
+supervision and established mobility aids before any real-world reliance.
